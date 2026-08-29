@@ -11,8 +11,12 @@ import { cn } from "@/lib/utils";
 function Brand() {
   return (
     <Link href="/dashboard" className="group flex items-center gap-3">
-      <span className="relative grid h-10 w-10 place-items-center rounded-xl bg-gradient-to-br from-amber-400 to-yellow-600 shadow-lg shadow-amber-500/25 transition-transform duration-300 group-hover:scale-105">
-        <Icon name="gem" className="h-5 w-5 text-zinc-950" />
+      <span className="relative grid h-10 w-10 place-items-center overflow-hidden rounded-xl bg-white/[0.06] ring-1 ring-white/10 transition-transform duration-300 group-hover:scale-105">
+        <img
+          src="/marketing-os-logo.png"
+          alt="Marketing OS logo"
+          className="h-8 w-8 object-contain"
+        />
       </span>
       <span className="font-display text-[17px] font-bold leading-none text-white">
         Marketing <span className="text-gradient">OS</span>
