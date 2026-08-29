@@ -25,6 +25,14 @@ export const features: Feature[] = [
     status: "available",
   },
   {
+    id: "business-business-setup",
+    name: "Business & Brand Setup",
+    description: "Business profile, brand identity, products, market and goals",
+    route: "/business",
+    icon: "building",
+    status: "available",
+  },
+  {
     id: "strategy-marketing-strategist",
     name: "Marketing Strategist",
     description: "Build and manage marketing strategies",
