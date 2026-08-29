@@ -9,6 +9,7 @@ import { Icon } from "@/components/ui/icon";
 import type { Feature } from "@/lib/features";
 import { features, isFeatureAvailable } from "@/lib/features";
 import { ComingSoon } from "@/components/ui/ComingSoon";
+import { DashboardHealthScore } from "@/components/health/DashboardHealthScore";
 
 const welcomeMessages = [
   "Good morning! Ready to elevate your marketing today?",
@@ -53,14 +54,7 @@ export default function MarketingOSDashboard() {
 
         {/* Marketing Health */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-10">
-          <div className="glass-panel rounded-2xl p-6 border border-white/10">
-            <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-zinc-500 mb-3">Marketing Health Score</p>
-            <div className="flex items-baseline gap-2">
-              <span className="font-display text-4xl font-bold text-amber-300">72</span>
-              <span className="text-[15px] text-zinc-400">/ 100</span>
-            </div>
-            <p className="text-[12px] text-zinc-500 mt-2">Good progress — room to grow</p>
-          </div>
+          <DashboardHealthScore />
 
           <div className="glass-panel rounded-2xl p-6 border border-white/10">
             <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-zinc-500 mb-3">Campaign Effectiveness</p>

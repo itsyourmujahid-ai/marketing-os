@@ -33,6 +33,14 @@ export const features: Feature[] = [
     status: "available",
   },
   {
+    id: "health-marketing-health",
+    name: "Marketing Health",
+    description: "Diagnostic marketing readiness score and prioritized recommendations",
+    route: "/health",
+    icon: "gauge",
+    status: "available",
+  },
+  {
     id: "strategy-marketing-strategist",
     name: "Marketing Strategist",
     description: "Build and manage marketing strategies",

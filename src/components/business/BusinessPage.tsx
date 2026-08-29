@@ -5,8 +5,10 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { getBusinessService } from "@/lib/business/service";
 import type { Business } from "@/lib/business/types";
 import { computeCompleteness } from "@/lib/business/completeness";
+import { computeHealthReport } from "@/lib/health/scoring";
 import { cn } from "@/lib/utils";
 
+import Link from "next/link";
 import { Icon, type IconName } from "@/components/ui/icon";
 import { ProfileTab } from "./tabs/profile-tab";
 import { ProductsTab } from "./tabs/products-tab";
@@ -63,6 +65,11 @@ export function BusinessPage() {
     [business],
   );
 
+  const healthReport = useMemo(
+    () => (business ? computeHealthReport(business) : null),
+    [business],
+  );
+
   if (loading && !business) {
     return <BusinessSkeleton />;
   }
@@ -113,6 +120,13 @@ export function BusinessPage() {
             <span className="h-1.5 w-1.5 rounded-full bg-current" />
             {report.score}% complete
           </span>
+          <Link
+            href="/health"
+            className="inline-flex items-center gap-1.5 rounded-full bg-white/[0.05] px-3 py-1 text-xs font-medium text-zinc-300 ring-1 ring-inset ring-white/10 transition-colors hover:bg-white/[0.1] hover:text-white"
+          >
+            <Icon name="gauge" className="h-3.5 w-3.5 text-amber-300" />
+            Health {healthReport?.overallScore ?? "—"}%
+          </Link>
         </div>
         <p className="mt-1 text-sm text-zinc-500">
           {tab.blurb} — the central source of truth for every Marketing OS module.
