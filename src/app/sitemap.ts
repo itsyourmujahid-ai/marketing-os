@@ -5,7 +5,7 @@ import { sections } from "@/lib/catalog";
 export const dynamic = "force-static";
 
 const siteUrl =
-  process.env.NEXT_PUBLIC_SITE_URL ?? "https://itsyourmujahid-ai.github.io/video-eraser";
+  process.env.NEXT_PUBLIC_SITE_URL ?? "https://marketing-os-zeta-sage.vercel.app";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const lastModified = new Date();
