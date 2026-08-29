@@ -2,6 +2,8 @@
 
 import { useCallback, useEffect, useMemo, useState } from "react";
 
+import { getAudienceService } from "@/lib/audience/service";
+import type { AudienceState } from "@/lib/audience/types";
 import { getBusinessService } from "@/lib/business/service";
 import type { Business } from "@/lib/business/types";
 import { computeCompleteness } from "@/lib/business/completeness";
@@ -30,7 +32,9 @@ const TABS: Array<{ id: string; label: string; icon: IconName; blurb: string }> 
 
 export function BusinessPage() {
   const service = useMemo(() => getBusinessService(), []);
+  const audienceService = useMemo(() => getAudienceService(), []);
   const [business, setBusiness] = useState<Business | null>(null);
+  const [audience, setAudience] = useState<AudienceState | null>(null);
   const [loading, setLoading] = useState(true);
   const [loadError, setLoadError] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState(0);
@@ -39,13 +43,18 @@ export function BusinessPage() {
     setLoading(true);
     setLoadError(null);
     try {
-      setBusiness(await service.getBusiness());
+      const [biz, aud] = await Promise.all([
+        service.getBusiness(),
+        audienceService.getState(),
+      ]);
+      setBusiness(biz);
+      setAudience(aud);
     } catch {
       setLoadError("Could not load business data.");
     } finally {
       setLoading(false);
     }
-  }, [service]);
+  }, [service, audienceService]);
 
   useEffect(() => {
     // Load the workspace on mount; setState calls happen inside the async fetch.
@@ -66,8 +75,8 @@ export function BusinessPage() {
   );
 
   const healthReport = useMemo(
-    () => (business ? computeHealthReport(business) : null),
-    [business],
+    () => (business ? computeHealthReport(business, audience ?? undefined) : null),
+    [business, audience],
   );
 
   if (loading && !business) {

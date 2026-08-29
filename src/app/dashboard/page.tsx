@@ -10,6 +10,7 @@ import type { Feature } from "@/lib/features";
 import { features, isFeatureAvailable } from "@/lib/features";
 import { ComingSoon } from "@/components/ui/ComingSoon";
 import { DashboardHealthScore } from "@/components/health/DashboardHealthScore";
+import { DashboardAudienceSummary } from "@/components/audience/DashboardAudienceSummary";
 
 const welcomeMessages = [
   "Good morning! Ready to elevate your marketing today?",
@@ -65,14 +66,7 @@ export default function MarketingOSDashboard() {
             <p className="text-[12px] text-zinc-500 mt-2">Above industry average</p>
           </div>
 
-          <div className="glass-panel rounded-2xl p-6 border border-white/10">
-            <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-zinc-500 mb-3">Audience Growth</p>
-            <div className="flex items-baseline gap-2">
-              <span className="font-display text-3xl font-bold text-sky-300">15</span>
-              <span className="text-[15px] text-zinc-400">%</span>
-            </div>
-            <p className="text-[12px] text-zinc-500 mt-2">Month-over-month</p>
-          </div>
+          <DashboardAudienceSummary />
         </div>
 
         {/* Marketing Overview Cards */}

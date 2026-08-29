@@ -1,4 +1,5 @@
 import type { IconName } from "@/components/ui/icon";
+import type { AudienceSegment, Persona } from "@/lib/audience/types";
 import type { Business } from "@/lib/business/types";
 import type { HealthCategoryId, HealthCheck } from "./types";
 
@@ -6,6 +7,19 @@ export interface CategoryRuleResult {
   checks: HealthCheck[];
   explanation: string;
 }
+
+/**
+ * Optional, additive context passed to the scoring engine. When the Audience
+ * module holds data it contributes to the relevant categories; when it is empty
+ * the business-only baseline still applies exactly as before — audience detail
+ * can only add signal, never punish an empty module.
+ */
+export interface HealthContext {
+  segments: AudienceSegment[];
+  personas: Persona[];
+}
+
+export const EMPTY_HEALTH_CONTEXT: HealthContext = { segments: [], personas: [] };
 
 function filled(value: string | undefined | null): boolean {
   return Boolean(value && value.trim().length > 0);
@@ -133,7 +147,7 @@ export function marketRelevance(b: Business): MarketRelevance {
   };
 }
 
-export function marketRules(b: Business): CategoryRuleResult {
+export function marketRules(b: Business, cx?: HealthContext): CategoryRuleResult {
   const m = b.targetMarket;
   const rel = marketRelevance(b);
 
@@ -175,6 +189,23 @@ export function marketRules(b: Business): CategoryRuleResult {
     checks.push(...b2cChecks);
     earned += b2cChecks.reduce((s, c) => s + (c.passed ? c.points : 0), 0);
     total += b2cChecks.reduce((s, c) => s + c.points, 0);
+  }
+
+  // Additive checks powered by the Audience module (only when it has data).
+  const segments = cx?.segments ?? [];
+  const personas = cx?.personas ?? [];
+  if (segments.length > 0) {
+    const audienceChecks: HealthCheck[] = [
+      p("audSegments", "Audience segments defined", segments.length > 0, 12),
+      p("audPrimary", "Primary audience marked", segments.some((s) => s.role === "Primary"), 8),
+      p("audDetail", "Audience pain points defined", segments.some((s) => listFilled(s.painPoints)), 8),
+      p("audTriggers", "Audience buying triggers", segments.some((s) => listFilled(s.buyingTriggers)), 8),
+      p("audChannels", "Audience channels defined", segments.some((s) => listFilled(s.preferredChannels)), 8),
+      p("audPersonas", "Personas defined", personas.length > 0, 6),
+    ];
+    checks.push(...audienceChecks);
+    earned += audienceChecks.reduce((s, c) => s + (c.passed ? c.points : 0), 0);
+    total += audienceChecks.reduce((s, c) => s + c.points, 0);
   }
 
   const score = toScore(earned, total);
@@ -300,7 +331,7 @@ export function offerRules(b: Business): CategoryRuleResult {
 // 6. Conversion Readiness
 // ---------------------------------------------------------------------------
 
-export function conversionRules(b: Business): CategoryRuleResult {
+export function conversionRules(b: Business, cx?: HealthContext): CategoryRuleResult {
   const tm = b.targetMarket;
   const vp = b.valueProposition;
   const marketDefined = filled(tm.customerType) && filled(tm.primaryMarket);
@@ -317,6 +348,15 @@ export function conversionRules(b: Business): CategoryRuleResult {
     p("cta", "Clear CTA concept", ctaReady, 20),
     p("website", "Website availability", websiteOk, 20),
   ];
+
+  const segments = cx?.segments ?? [];
+  if (segments.length > 0) {
+    checks.push(
+      p("audSegmented", "Segmented target audience", segments.length > 0, 10),
+      p("audTriggers", "Buying triggers to convert on", segments.some((s) => listFilled(s.buyingTriggers)), 5),
+      p("audChannels", "Segment channels for conversion", segments.some((s) => listFilled(s.preferredChannels)), 5),
+    );
+  }
   const total = checks.reduce((s, c) => s + c.points, 0);
   const score = toScore(checks.reduce((s, c) => s + (c.passed ? c.points : 0), 0), total);
 
@@ -337,7 +377,7 @@ export function conversionRules(b: Business): CategoryRuleResult {
 // 7. Content Readiness
 // ---------------------------------------------------------------------------
 
-export function contentRules(b: Business): CategoryRuleResult {
+export function contentRules(b: Business, cx?: HealthContext): CategoryRuleResult {
   const v = b.brandVoice;
   const tm = b.targetMarket;
   const rel = marketRelevance(b);
@@ -356,6 +396,20 @@ export function contentRules(b: Business): CategoryRuleResult {
     p("problem", "Customer problem", filled(b.valueProposition.problemSolved), 10),
     p("channels", "Preferred channels", listFilled(tm.preferredChannels), 15),
   ];
+
+  const segments = cx?.segments ?? [];
+  const personas = cx?.personas ?? [];
+  if (segments.length > 0 || personas.length > 0) {
+    const personaMessaging = personas.some(
+      (p) => filled(p.whatCaresAbout) || filled(p.resonantMessage) || filled(p.languageTone),
+    );
+    checks.push(
+      p("audPains", "Audience pain points for content", segments.some((s) => listFilled(s.painPoints)), 8),
+      p("audTriggers", "Audience triggers for content", segments.some((s) => listFilled(s.buyingTriggers)), 6),
+      p("audChannels", "Audience channels for content", segments.some((s) => listFilled(s.preferredChannels)), 6),
+      p("personaVoice", "Persona messaging preferences", personaMessaging, 8),
+    );
+  }
   const total = checks.reduce((s, c) => s + c.points, 0);
   const score = toScore(checks.reduce((s, c) => s + (c.passed ? c.points : 0), 0), total);
 
@@ -414,7 +468,7 @@ export interface CategoryDefinition {
   name: string;
   icon: IconName;
   weight: number;
-  run: (b: Business) => CategoryRuleResult;
+  run: (b: Business, cx?: HealthContext) => CategoryRuleResult;
 }
 
 export const CATEGORY_DEFINITIONS: CategoryDefinition[] = [

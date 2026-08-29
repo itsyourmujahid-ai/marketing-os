@@ -3,8 +3,10 @@ import type { Business } from "@/lib/business/types";
 
 import {
   CATEGORY_DEFINITIONS,
+  EMPTY_HEALTH_CONTEXT,
   filled,
   missingFrom,
+  type HealthContext,
 } from "./rules";
 import type {
   HealthCategory,
@@ -261,6 +263,43 @@ const RECS: Record<string, RecTemplate> = {
     actionLabel: "Go to Audience",
   },
 
+  "market:audSegments": {
+    title: "Define Audience Segments",
+    description: "Concrete segments power the whole Marketing OS — personas and campaigns build on them.",
+    relatedRoute: "/audience",
+    actionLabel: "Go to Audience",
+  },
+  "market:audPrimary": {
+    title: "Mark a Primary Audience",
+    description: "Campaigns need one priority target — mark your most important segment as Primary.",
+    relatedRoute: "/audience",
+    actionLabel: "Go to Audience",
+  },
+  "market:audDetail": {
+    title: "Add Audience Pain Points",
+    description: "Documented pain points let offers and content speak to the problems you actually solve.",
+    relatedRoute: "/audience",
+    actionLabel: "Go to Audience",
+  },
+  "market:audTriggers": {
+    title: "Add Buying Triggers",
+    description: "Knowing what pushes your audience to buy now makes campaigns timely and effective.",
+    relatedRoute: "/audience",
+    actionLabel: "Go to Audience",
+  },
+  "market:audChannels": {
+    title: "Add Audience Channels",
+    description: "Record where each segment spends time so campaigns are placed where the audience is.",
+    relatedRoute: "/audience",
+    actionLabel: "Go to Audience",
+  },
+  "market:audPersonas": {
+    title: "Create Personas",
+    description: "Personas turn segment data into a named buyer you can write to.",
+    relatedRoute: "/audience",
+    actionLabel: "Go to Audience",
+  },
+
   "goals:bgNamed": {
     title: "Add Business Goals",
     description: "Goals give your marketing direction and a reason to exist.",
@@ -419,6 +458,24 @@ const RECS: Record<string, RecTemplate> = {
     relatedRoute: "/business",
     actionLabel: "Go to Business Setup",
   },
+  "conversion:audSegmented": {
+    title: "Build a Segmented Audience",
+    description: "Defined audience segments convert better than a vague target market.",
+    relatedRoute: "/audience",
+    actionLabel: "Go to Audience",
+  },
+  "conversion:audTriggers": {
+    title: "Convert on Buying Triggers",
+    description: "Calls-to-action that match buying triggers turn interest into action.",
+    relatedRoute: "/audience",
+    actionLabel: "Go to Audience",
+  },
+  "conversion:audChannels": {
+    title: "Place Conversion Paths on Segment Channels",
+    description: "Knowing segment channels tells you where conversion pages and CTAs belong.",
+    relatedRoute: "/audience",
+    actionLabel: "Go to Audience",
+  },
 
   "content:audience": {
     title: "Define Your Target Audience",
@@ -473,6 +530,30 @@ const RECS: Record<string, RecTemplate> = {
     description: "Pick the channels your audience uses so content reaches them.",
     relatedRoute: "/content",
     actionLabel: "Go to Content Studio",
+  },
+  "content:audPains": {
+    title: "Base Content on Audience Pain Points",
+    description: "Content that addresses documented pains connects with the audience.",
+    relatedRoute: "/audience",
+    actionLabel: "Go to Audience",
+  },
+  "content:audTriggers": {
+    title: "Use Buying Triggers in Content",
+    description: "Triggers give content a reason to be timely — lean on the moments that drive purchases.",
+    relatedRoute: "/audience",
+    actionLabel: "Go to Audience",
+  },
+  "content:audChannels": {
+    title: "Publish Where the Audience Is",
+    description: "Audience-defined channels tell you exactly where content should appear.",
+    relatedRoute: "/audience",
+    actionLabel: "Go to Audience",
+  },
+  "content:personaVoice": {
+    title: "Define Persona Messaging",
+    description: "What the persona cares about, the message that resonates, and the tone they hear.",
+    relatedRoute: "/audience",
+    actionLabel: "Go to Audience",
   },
 
   "measurement:mgPrimary": {
@@ -540,7 +621,11 @@ function recTemplateFor(category: HealthCategoryId, checkId: string): RecTemplat
 // Strengths / weaknesses / readiness
 // ---------------------------------------------------------------------------
 
-function buildStrengths(categories: HealthCategory[], b: Business): HealthStrength[] {
+function buildStrengths(
+  categories: HealthCategory[],
+  b: Business,
+  cx: HealthContext = EMPTY_HEALTH_CONTEXT,
+): HealthStrength[] {
   const strength: HealthStrength[] = [];
 
   for (const cat of categories) {
@@ -580,6 +665,18 @@ function buildStrengths(categories: HealthCategory[], b: Business): HealthStreng
       label: "Defined target market",
       category: "market",
       score: 88,
+    });
+  }
+  if (
+    cx.segments.length > 0 &&
+    cx.segments.some((s) => s.role === "Primary") &&
+    cx.personas.length > 0
+  ) {
+    strength.push({
+      id: "audience-segmented",
+      label: "Defined audience & personas",
+      category: "market",
+      score: 92,
     });
   }
   const measurableGoal =
@@ -657,6 +754,16 @@ function weaknessLabel(category: HealthCategoryId, checkId: string): string | nu
       return "B2B decision-maker not identified";
     case "market:b2cAudience":
       return "Consumer segments are too broad";
+    case "market:audPrimary":
+      return "No primary audience segment";
+    case "market:audDetail":
+      return "Audience pain points missing";
+    case "market:audPersonas":
+      return "No personas defined";
+    case "content:personaVoice":
+      return "Persona messaging not defined";
+    case "conversion:audSegmented":
+      return "Audience not segmented for conversion";
     case "brand:tones":
       return "Missing brand voice";
     case "brand:logo":
@@ -706,11 +813,14 @@ const PRIORITY_ORDER: Record<RecommendationPriority, number> = {
   Low: 3,
 };
 
-export function computeHealthReport(business: Business): HealthReport {
+export function computeHealthReport(
+  business: Business,
+  context: HealthContext = EMPTY_HEALTH_CONTEXT,
+): HealthReport {
   const now = new Date().toISOString();
 
   const categories: HealthCategory[] = CATEGORY_DEFINITIONS.map((def) => {
-    const { checks, explanation } = def.run(business);
+    const { checks, explanation } = def.run(business, context);
     const total = checks.reduce((s, c) => s + c.points, 0);
     const earned = checks.reduce((s, c) => s + (c.passed ? c.points : 0), 0);
     const score = total <= 0 ? 0 : Math.round((earned / total) * 100);
@@ -762,7 +872,8 @@ export function computeHealthReport(business: Business): HealthReport {
     business.products.length > 0 ||
     filled(business.targetMarket.customerType) ||
     filled(business.valueProposition.mainValue) ||
-    business.brandVoice.tones.length > 0;
+    business.brandVoice.tones.length > 0 ||
+    context.segments.length > 0;
 
   return {
     overallScore,
@@ -770,7 +881,7 @@ export function computeHealthReport(business: Business): HealthReport {
     explanation: overallExplanation(overallScore),
     hasSubstantialData,
     categories,
-    strengths: buildStrengths(categories, business),
+    strengths: buildStrengths(categories, business, context),
     weaknesses: buildWeaknesses(categories),
     recommendations: recs,
     readiness: buildReadiness(categories),

@@ -62,7 +62,7 @@ export const features: Feature[] = [
     description: "Define and manage target audiences and personas",
     route: "/audience",
     icon: "user",
-    status: "coming-soon",
+    status: "available",
   },
   {
     id: "strategy-competitor-intelligence",
