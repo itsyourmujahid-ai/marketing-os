@@ -3,7 +3,7 @@ import type { MetadataRoute } from "next";
 import { sections } from "@/lib/catalog";
 
 const siteUrl =
-  process.env.NEXT_PUBLIC_SITE_URL ?? "https://design-khajana.vercel.app";
+  process.env.NEXT_PUBLIC_SITE_URL ?? "https://marketing-os-zeta-sage.vercel.app";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const lastModified = new Date();

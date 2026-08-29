@@ -19,7 +19,7 @@ export async function generateMetadata({ params }: { params: Params }): Promise<
     title: section.name,
     description: section.description,
     openGraph: {
-      title: `${section.name} · Design Khajana`,
+      title: `${section.name} · Marketing OS`,
       description: section.description,
       type: "website",
     },

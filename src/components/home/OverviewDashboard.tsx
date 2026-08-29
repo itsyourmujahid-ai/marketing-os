@@ -122,7 +122,7 @@ export function OverviewDashboard() {
         <div className="relative max-w-2xl">
           <span className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.04] px-3.5 py-1.5 text-xs font-medium text-zinc-300">
             <Icon name="gem" className="h-4 w-4 text-amber-300" />
-            Design Khajana · v0.1 Foundation
+            Marketing OS · v0.1 Foundation
           </span>
 
           <h1 className="font-display mt-6 text-4xl font-bold leading-[1.08] tracking-tight text-white sm:text-5xl">

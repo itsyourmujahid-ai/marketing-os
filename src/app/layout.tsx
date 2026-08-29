@@ -17,37 +17,38 @@ const spaceGrotesk = Space_Grotesk({
 });
 
 const siteUrl =
-  process.env.NEXT_PUBLIC_SITE_URL ?? "https://design-khajana.vercel.app";
+  process.env.NEXT_PUBLIC_SITE_URL ?? "https://marketing-os-zeta-sage.vercel.app";
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: {
-    default: "Design Khajana — The Designers' Toolkit",
-    template: "%s · Design Khajana",
+    default: "Marketing OS",
+    template: "%s · Marketing OS",
   },
   description:
-    "Eleven modular design studios and 68 tools for images, icons, colour, typography, layout, print and more.",
+    "Marketing OS — the operating system for modern marketing teams. Strategy, campaigns, content, leads, automation and analytics in one place.",
   keywords: [
-    "design tools",
-    "image editing",
-    "colour palette",
-    "typography",
-    "grid system",
-    "print design",
-    "design khajana",
+    "marketing operating system",
+    "marketing automation",
+    "campaign management",
+    "content marketing",
+    "lead management",
+    "marketing analytics",
+    "saas",
+    "marketing os",
   ],
   openGraph: {
     type: "website",
-    siteName: "Design Khajana",
-    title: "Design Khajana — The Designers' Toolkit",
+    siteName: "Marketing OS",
+    title: "Marketing OS",
     description:
-      "Eleven modular design studios and 68 tools for images, icons, colour, typography, layout, print and more.",
+      "The operating system for modern marketing teams. Strategy, campaigns, content, leads, automation and analytics in one place.",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Design Khajana — The Designers' Toolkit",
+    title: "Marketing OS",
     description:
-      "Eleven modular design studios and 68 tools ready for production.",
+      "The operating system for modern marketing teams. Strategy, campaigns, content, leads, automation and analytics.",
   },
 };
 

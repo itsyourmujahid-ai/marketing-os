@@ -183,7 +183,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
                 target="_blank"
                 rel="noopener noreferrer"
                 className="grid h-10 w-10 place-items-center rounded-xl border border-white/10 bg-white/[0.04] text-zinc-300 transition-colors hover:bg-white/[0.08] hover:text-white"
-                aria-label="Design Khajana on GitHub"
+                aria-label="Marketing OS on GitHub"
               >
                 <Icon name="github" className="h-[18px] w-[18px]" />
               </a>

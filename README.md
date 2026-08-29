@@ -1,54 +1,52 @@
-# Design Khajana
+# Marketing OS
 
-A premium, responsive design-tools dashboard. Eleven studios · 68 tools — built as a modular, future-ready UI foundation.
+The operating system for modern marketing teams — strategy, campaigns, content, leads, automation and analytics in one place.
 
-![Design Khajana](./.github/banner.svg)
+A modular, future-ready SaaS foundation built with Next.js App Router.
 
 ## Roadmap status
 
-Everything is **UI-ready and non-functional by design**:
+Marketing OS is in its foundation phase:
 
-- Sidebar navigation across **11 main sections** (Overview + 10 studios).
-- Each section lists its tools as navigable cards.
-- Clicking any tool opens a polished **“Coming Soon”** dialog.
-- No APIs, no database, no authentication, no file storage — yet.
+- **Dashboard** (`/dashboard`) — functional with health score, overview cards, active campaigns, upcoming content, AI marketing manager and recommended actions.
+- **Feature registry** in `src/lib/features.ts` — 35 features registered with routes and status.
+- **Coming Soon** states for Strategy, Campaigns, Content, Leads, Automation, Analytics, Team, Integrations and Settings.
+- No APIs, no database, no authentication — yet.
 
-## Sections
+## Feature routes
 
-| Studio | Tools |
+| Feature | Route |
 | --- | --- |
-| **Image Lab** | BG Remove · 4K Upscale · Enhance · Sharpen · Resize · Crop · Compress · Format Convert · Background Change |
-| **Icon Khajana** | Icon Search · Categories · SVG Icons · PNG Icons · Icon Editor |
-| **Colour Studio** | Colour Picker · Palette Generator · Gradient Generator · Contrast Checker · Colour Harmony · Colour Converter |
-| **Typography Studio** | Typography Rules · Font Pairing · Type Scale · Hierarchy · Line Height · Letter Spacing |
-| **Text Studio** | Text Hierarchy · Heading · Subheading · Body · CTA · Rewrite · Shorten · Professional · Premium · Corporate · Catchy |
-| **Design Size & Layout** | Social Media Sizes · Print Sizes · Custom Canvas · Ratios |
-| **Print Studio** | DPI Calculator · RGB/CMYK · Bleed · Safe Area · Unit Converter · Print Resolution |
-| **Inspector** | Image Inspector · Resolution · DPI · File Info · Colour Mode · Print Check |
-| **Design Doctor** | Design Checker · Typography Check · Colour Check · Contrast Check · Spacing · Alignment · Composition · Auto Fix |
-| **Grid Khajana** | Featured Grids · Ratio · Grid Library · References · Show Grid · Use on Canvas · How to Use |
+| **Dashboard** | `/dashboard` |
+| **Strategy** | `/strategy` |
+| **Campaigns** | `/campaigns` |
+| **Content** | `/content` |
+| **Leads** | `/leads` |
+| **Automation** | `/automation` |
+| **Analytics** | `/analytics` |
+| **Team** | `/team` |
+| **Integrations** | `/integrations` |
+| **Settings** | `/settings` |
 
 ## Architecture
 
-The codebase is fully data-driven — adding a tool is a one-line catalog change.
+The codebase is fully data-driven — adding a feature is a one-line registry change in `src/lib/features.ts`.
 
 ```
 src/
-├── app/                 # Next.js App Router (routes, metadata, manifest, sitemap)
-│   ├── [section]/       # One dynamic route renders all 10 studios
-│   ├── layout.tsx       # Root layout: fonts, metadata, app shell
-│   └── page.tsx         # Overview dashboard
+├── app/                    # Next.js App Router (routes, metadata, manifest, sitemap)
+│   ├── dashboard/          # Functional dashboard
+│   ├── [feature]/          # Coming Soon routes
+│   ├── layout.tsx          # Root layout: fonts, metadata, app shell
 ├── components/
-│   ├── home/            # Overview dashboard
-│   ├── layout/          # Sidebar, topbar, mobile drawer
-│   ├── sections/        # Section hero, tool cards, tool grid
-│   └── ui/              # Icon system, coming-soon modal
+│   ├── layout/             # Sidebar, topbar, mobile drawer
+│   └── ui/                 # Icon system, coming-soon component
 └── lib/
-    ├── catalog.ts       # Single source of truth for sections + tools
-    └── utils.ts         # cn() helper
+    ├── features.ts         # Single source of truth for all features
+    └── utils.ts            # cn() helper
 ```
 
-Future-ready by design: each tool is a typed `Tool` entry with name, description and icon, grouped under a `Section` with its own visual accent. Engines can be added per-tool with no structural changes.
+Each feature is a typed registry entry with name, description, route and icon.
 
 ## Getting started
 
@@ -72,11 +70,7 @@ Open http://localhost:3000.
 
 ## Configuration
 
-Copy `.env.example` to `.env.local` and set `NEXT_PUBLIC_SITE_URL` to your production URL (used for metadata, Open Graph and the sitemap).
-
-```bash
-cp .env.example .env.local
-```
+Set `NEXT_PUBLIC_SITE_URL` to your production URL (used for metadata, Open Graph and the sitemap).
 
 ## Deploying
 
@@ -96,17 +90,7 @@ npm i -g vercel
 vercel
 ```
 
-> Tip: every route is static (the `[section]` page uses `generateStaticParams`), so builds are fast and edge-friendly.
-
-### Any other host
-
-```bash
-npm run build
-npm run start
-```
-
 ## Customisation
 
-- **Sections & tools**: edit `src/lib/catalog.ts`.
-- **Accent colours**: the `Accent` interface in `catalog.ts`; class strings map to Tailwind utilities.
+- **Features & navigation**: edit `src/lib/features.ts`.
 - **Icons**: add a key to the icon map in `src/components/ui/icon.tsx`.

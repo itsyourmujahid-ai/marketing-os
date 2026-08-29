@@ -2,10 +2,10 @@ import type { MetadataRoute } from "next";
 
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: "Design Khajana — The Designers' Toolkit",
-    short_name: "Design Khajana",
+    name: "Marketing OS",
+    short_name: "Marketing OS",
     description:
-      "Eleven modular design studios and 68 tools for images, icons, colour, typography, layout, print and more.",
+      "The operating system for modern marketing teams. Strategy, campaigns, content, leads, automation and analytics in one place.",
     start_url: "/",
     display: "standalone",
     background_color: "#070910",
