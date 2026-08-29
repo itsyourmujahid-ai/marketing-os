@@ -5,17 +5,17 @@ import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 
 import { Icon } from "@/components/ui/icon";
-import { navItems, sections, studioCount, totalTools } from "@/lib/catalog";
+import { features, getFeature, isFeatureAvailable } from "@/lib/features";
 import { cn } from "@/lib/utils";
 
 function Brand() {
   return (
-    <Link href="/" className="group flex items-center gap-3">
+    <Link href="/dashboard" className="group flex items-center gap-3">
       <span className="relative grid h-10 w-10 place-items-center rounded-xl bg-gradient-to-br from-amber-400 to-yellow-600 shadow-lg shadow-amber-500/25 transition-transform duration-300 group-hover:scale-105">
         <Icon name="gem" className="h-5 w-5 text-zinc-950" />
       </span>
       <span className="font-display text-[17px] font-bold leading-none text-white">
-        Design <span className="text-gradient">Khajana</span>
+        Marketing <span className="text-gradient">OS</span>
       </span>
     </Link>
   );
@@ -27,35 +27,35 @@ function NavList({ onNavigate }: { onNavigate?: () => void }) {
   return (
     <nav aria-label="Main navigation" className="mt-8 flex-1 overflow-y-auto pr-1">
       <p className="px-3 text-[11px] font-semibold uppercase tracking-[0.14em] text-zinc-500">
-        Studios
+        Marketing OS
       </p>
       <ul className="mt-3 space-y-1">
-        {navItems.map((item) => {
-          const active =
-            item.href === "/"
-              ? pathname === "/"
-              : pathname === item.href || pathname.startsWith(`${item.href}/`);
+        {features.map((feature) => {
+          const active = pathname === feature.route;
+          const isAvailable = isFeatureAvailable(feature.route);
           return (
-            <li key={item.href}>
+            <li key={feature.id}>
               <Link
-                href={item.href}
+                href={feature.route}
                 onClick={onNavigate}
                 aria-current={active ? "page" : undefined}
                 className={cn(
                   "group flex items-center gap-3 rounded-xl border border-transparent px-3 py-2 text-sm font-medium transition-colors",
                   active
                     ? "border-white/10 bg-white/[0.07] text-white shadow-[0_1px_0_rgba(255,255,255,0.06)_inset]"
-                    : "text-zinc-400 hover:bg-white/[0.04] hover:text-zinc-200",
+                    : isAvailable
+                      ? "text-zinc-400 hover:bg-white/[0.04] hover:text-zinc-200"
+                      : "text-zinc-500",
                 )}
               >
                 <Icon
-                  name={item.icon}
+                  name={feature.icon}
                   className={cn(
                     "h-[18px] w-[18px] transition-colors",
-                    active ? "text-amber-300" : "text-zinc-500 group-hover:text-zinc-300",
+                    active ? "text-amber-300" : isAvailable ? "text-zinc-500" : "text-zinc-400",
                   )}
                 />
-                <span className="truncate">{item.label}</span>
+                <span className="truncate">{feature.name}</span>
                 {active && (
                   <span className="ml-auto h-1.5 w-1.5 rounded-full bg-amber-400" />
                 )}
@@ -76,8 +76,7 @@ function SidebarFooter() {
         <p className="text-sm font-semibold">Foundation ready</p>
       </div>
       <p className="mt-2 text-xs leading-relaxed text-zinc-500">
-        {studioCount} studios · {totalTools} tools — every tool is wired and
-        waiting for its engine.
+        {features.length} modules — marketing operating system
       </p>
       <span className="mt-3 inline-flex items-center gap-1.5 rounded-full border border-amber-400/20 bg-amber-500/10 px-2.5 py-1 text-[11px] font-medium text-amber-300">
         <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-amber-400" />
@@ -116,8 +115,8 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
     };
   }, [drawerOpen]);
 
-  const section = sections.find((s) => pathname.startsWith(`/${s.slug}`));
-  const title = section ? section.name : "Overview";
+  const feature = getFeature(pathname) || getFeature("/dashboard");
+  const title = feature ? feature.name : "Marketing OS";
 
   return (
     <div className="min-h-screen">
@@ -160,7 +159,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
 
             <div className="min-w-0">
               <p className="text-[11px] font-medium uppercase tracking-[0.14em] text-zinc-500">
-                Design Khajana
+                Marketing OS
               </p>
               <h1 className="font-display truncate text-lg font-bold leading-tight text-white">
                 {title}
