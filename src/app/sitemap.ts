@@ -2,8 +2,10 @@ import type { MetadataRoute } from "next";
 
 import { sections } from "@/lib/catalog";
 
+export const dynamic = "force-static";
+
 const siteUrl =
-  process.env.NEXT_PUBLIC_SITE_URL ?? "https://video-eraser-bahwan-order-tracking.vercel.app";
+  process.env.NEXT_PUBLIC_SITE_URL ?? "https://itsyourmujahid-ai.github.io/video-eraser";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const lastModified = new Date();
