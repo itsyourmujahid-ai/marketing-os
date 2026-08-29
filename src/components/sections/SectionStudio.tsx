@@ -3,6 +3,7 @@
 import { useState } from "react";
 
 import { ImageLab } from "@/components/image-lab/ImageLab";
+import { VideoLab } from "@/components/video-lab/VideoLab";
 import { ToolCard } from "@/components/sections/ToolCard";
 import { ComingSoonModal } from "@/components/ui/ComingSoonModal";
 import { Icon } from "@/components/ui/icon";
@@ -14,6 +15,10 @@ export function SectionStudio({ section }: { section: Section }) {
 
   if (section.slug === "image-lab") {
     return <ImageLab section={section} />;
+  }
+
+  if (section.slug === "video-lab") {
+    return <VideoLab section={section} />;
   }
 
   return (

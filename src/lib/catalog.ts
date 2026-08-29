@@ -138,6 +138,16 @@ const fuchsia: Accent = {
   dot: "bg-fuchsia-400",
 };
 
+const cyan: Accent = {
+  text: "text-cyan-300",
+  bg: "bg-cyan-500/10",
+  border: "border-cyan-400/25",
+  ring: "ring-cyan-400/30",
+  gradient: "from-cyan-400 to-sky-500",
+  glow: "shadow-cyan-500/15",
+  dot: "bg-cyan-400",
+};
+
 export const sections: Section[] = [
   {
     slug: "image-lab",
@@ -608,6 +618,34 @@ export const sections: Section[] = [
       },
     ],
   },
+{
+    slug: "video-lab",
+    name: "Video Lab",
+    short: "Video Lab",
+    tagline: "Clean footage in seconds.",
+    description:
+      "Erase logos, watermarks and unwanted objects from videos — 100% in your browser, nothing ever uploaded.",
+    icon: "video",
+    accent: cyan,
+    tools: [
+      {
+        id: "watermark-erase",
+        name: "Logo Eraser",
+        description: "Remove logos and watermarks from any video in three steps.",
+        icon: "eraser",
+      },
+      {
+        name: "Object Remover",
+        description: "Patch out moving objects and unwanted on-screen elements.",
+        icon: "wand",
+      },
+      {
+        name: "Text Remover",
+        description: "Strip overlays, captions and burned-in subtitles.",
+        icon: "type",
+      },
+    ],
+  },
 ];
 
 export const overview: Section = {
@@ -616,7 +654,7 @@ export const overview: Section = {
   short: "Overview",
   tagline: "Your design toolkit, all in one place.",
   description:
-    "Eleven studios. Sixty-eight tools. Everything you need to design — one treasure chest.",
+    "Twelve studios. Seventy-one tools. Everything you need to design — one treasure chest.",
   icon: "gem",
   accent: amber,
   tools: [],

@@ -10,14 +10,14 @@ import { sections, totalTools } from "@/lib/catalog";
 import { cn } from "@/lib/utils";
 
 const stats = [
-  { value: "11", label: "Main sections" },
+  { value: "12", label: "Main sections" },
   { value: String(totalTools), label: "Design tools" },
   { value: "0", label: "APIs or databases" },
   { value: "100%", label: "Modular & ready" },
 ];
 
 function StudioCard({ section, onTool }: { section: Section; onTool: (tool: Tool) => void }) {
-  const live = section.slug === "image-lab";
+  const live = section.slug === "image-lab" || section.slug === "video-lab";
 
   return (
     <div
@@ -131,9 +131,9 @@ export function OverviewDashboard() {
           </h1>
 
           <p className="mt-5 text-lg leading-relaxed text-zinc-400">
-            Eleven dedicated studios — images, icons, colour, typography, grid
-            and everything in between. One clean, modular dashboard that grows
-            with your workflow.
+            Twelve dedicated studios — images, video, icons, colour, typography,
+            grid and everything in between. One clean, modular dashboard that
+            grows with your workflow.
           </p>
 
           <div className="mt-8 flex flex-wrap items-center gap-3">
@@ -197,7 +197,7 @@ export function OverviewDashboard() {
           Every interface is ready. The engines start here.
         </h2>
         <p className="mx-auto mt-3 max-w-xl text-sm leading-relaxed text-zinc-400">
-          This foundation ships all 11 sections and 68 tool surfaces with a
+          This foundation ships all 12 sections and 71 tool surfaces with a
           shared, reusable design system — so adding real functionality later is
           pure plug-and-play.
         </p>
